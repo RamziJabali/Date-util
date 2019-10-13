@@ -1,27 +1,49 @@
 public class DateUtil {
 
     public boolean checkGregorianDate(String inDate) {
-        String day = inDate.charAt(6) + "" + inDate.charAt(7);
-        String month = inDate.charAt(4) + "" + inDate.charAt(5);
-        String year = inDate.charAt(0) + "" + inDate.charAt(1) + "" + inDate.charAt(2) + "" + inDate.charAt(3);
-
-        int _day = getValueOrNegativeOneForIntegers(day);
-        int _month = getValueOrNegativeOneForIntegers(month);
-        int _year = getValueOrNegativeOneForIntegers(year);
+        String day, month, year;
+        int _day, _month, _year;
+        if (inDate.length() == 8) {
+            day = inDate.charAt(6) + "" + inDate.charAt(7);
+            month = inDate.charAt(4) + "" + inDate.charAt(5);
+            year = inDate.charAt(0) + "" + inDate.charAt(1) + "" + inDate.charAt(2) + "" + inDate.charAt(3);
+            _day = getValueOrNegativeOneForIntegers(day);
+            _month = getValueOrNegativeOneForIntegers(month);
+            _year = getValueOrNegativeOneForIntegers(year);
+        } else {
+            println("Enter a correct date EX(yyyy/mm/yy --> 03 07 2000) 8 CHARACTERS");
+            return false;
+        }
 
         if (_day < 1 || _month < 1 || _month > 12 || _year < 1) {
             println("Enter an integer that works please, Thank you!");
-            return false;
-        }
-        if (inDate.length() != 8) {
-            println("Enter a correct date EX(yyyy/mm/yy --> 03 07 2000) 8 CHARACTERS");
             return false;
         }
 
         if (!doesDayFitInMonth(_day, _month, _year)) {
             return false;
         }
-        println("Your date is good!");
+        println("Your Gregorian date is good!");
+        return true;
+    }
+
+    public boolean checkJulianDate(String inDate) {
+        String day, year;
+        int _day;
+        if (inDate.length() == 7) {
+            day = inDate.charAt(4) + "" + inDate.charAt(5) + "" + inDate.charAt(6);
+            year = inDate.charAt(0) + "" + inDate.charAt(1) + "" + inDate.charAt(2) + "" + inDate.charAt(3);
+            _day = getValueOrNegativeOneForIntegers(day);
+        } else {
+            println("Enter a correct date EX(yyyy/mm/yy --> 03 07 2000) 7 CHARACTERS");
+            return false;
+        }
+
+        if (_day < 1 || _day > 365 || year.length() != 4) {
+            println("Enter an integer that works please, Thank you!");
+            return false;
+        }
+        println("Your Julian date is good!");
         return true;
     }
 
