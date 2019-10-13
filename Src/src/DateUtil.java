@@ -130,6 +130,40 @@ public class DateUtil {
         return gregorianDate;
     }
 
+    public String dayOfTheWeekFromGregorianDate(String inDate) {
+        String day = inDate.charAt(6) + "" + inDate.charAt(7);//k - day
+        String month = inDate.charAt(4) + "" + inDate.charAt(5);//month
+        String year = inDate.charAt(2) + "" + inDate.charAt(3);//year
+        String century = inDate.charAt(0) + "" + inDate.charAt(1);//century
+        int k = getValueOrNegativeOneForIntegers(day);
+        int m = getValueOrNegativeOneForIntegers(month);
+        int Y = getValueOrNegativeOneForIntegers(year);
+        int C = getValueOrNegativeOneForIntegers(century);
+
+        int W = (int) (k + (2.6 * (m) - .2) - 2 * C + Y + (Y / 4) + (C / 4)) % 7;
+        return getDayOfTheWeek(W);
+    }
+
+    private String getDayOfTheWeek(int w) {
+        switch (w) {
+            case 0:
+                return "Sunday";
+            case 1:
+                return "Monday";
+            case 2:
+                return "Tuesday";
+            case 3:
+                return "Wednesday";
+            case 4:
+                return "Thursday";
+            case 5:
+                return "Friday";
+            case 6:
+                return "Saturday";
+        }
+        return null;
+    }
+
     private int monthToDays(int month) {
         int days = 0;
         for (int i = 1; i <= month; i++) {
