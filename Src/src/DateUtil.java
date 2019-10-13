@@ -1,4 +1,5 @@
 public class DateUtil {
+    private boolean isItALeapYear = false;
 
     public boolean checkGregorianDate(String inDate) {
         String day, month, year;
@@ -48,7 +49,6 @@ public class DateUtil {
     }
 
     private boolean doesDayFitInMonth(int day, int month, int year) {
-        boolean isItALeapYear = false;
         if (year % 4 == 0) {
             isItALeapYear = true;
         }
@@ -82,6 +82,56 @@ public class DateUtil {
 
         return true;
     }
+
+    public String gregorianDateToJulianDate(String inDate) {
+        String day = inDate.charAt(6) + "" + inDate.charAt(7);
+        String month = inDate.charAt(4) + "" + inDate.charAt(5);
+        String year = inDate.charAt(0) + "" + inDate.charAt(1) + "" + inDate.charAt(2) + "" + inDate.charAt(3);
+        int _day = getValueOrNegativeOneForIntegers(day);
+        int _month = getValueOrNegativeOneForIntegers(month);
+
+        int totalDays = _day + monthToDays(_month);
+        String julianDate;
+        if ((_day + "").length() < 3) {
+            julianDate = year + "0" + totalDays + "";
+        } else {
+            julianDate = year + "" + totalDays + "";
+        }
+        return julianDate;
+    }
+
+    private int monthToDays(int month) {
+        int days = 0;
+        for (int i = 1; i <= month; i++) {
+            days += numberOfDaysInMonth(i);
+        }
+        return days;
+    }
+
+    private int numberOfDaysInMonth(int month) {
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                return 31;
+            case 2://February
+                if (isItALeapYear) {
+                    return 29;
+                }
+                return 28;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                return 30;
+        }
+        return -1;
+    }
+
 
     private void println(String text) {
         System.out.println(text);
