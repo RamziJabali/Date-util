@@ -100,6 +100,36 @@ public class DateUtil {
         return julianDate;
     }
 
+    public String julianDateToGregorianDate(String inDate) {
+        int month = 0;
+        String year = inDate.charAt(0) + "" + inDate.charAt(1) + "" + inDate.charAt(2) + "" + inDate.charAt(3);
+        String day = inDate.charAt(4) + "" + inDate.charAt(5) + "" + inDate.charAt(6);
+        String gregorianDate = "";
+        int _day = getValueOrNegativeOneForIntegers(day);
+
+        for (int i = 1; i <= 12; i++) {
+            if (numberOfDaysInMonth(i) < _day) {
+                _day -= numberOfDaysInMonth(i);
+                month++;
+            } else if (numberOfDaysInMonth(i) == _day) {
+                break;
+            } else {
+                month++;
+                break;
+            }
+        }
+        if (_day < 10 && month < 10) {
+            gregorianDate = year + "0" + month + "0" + _day;
+        } else if (_day < 10 && month >= 10) {
+            gregorianDate = year + "" + month + "0" + _day;
+        } else if (_day >= 10 && month < 10) {
+            gregorianDate = year + "0" + month + "" + _day;
+        } else {
+            gregorianDate = year + "" + month + "" + _day;
+        }
+        return gregorianDate;
+    }
+
     private int monthToDays(int month) {
         int days = 0;
         for (int i = 1; i <= month; i++) {
