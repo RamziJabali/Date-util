@@ -164,6 +164,38 @@ public class DateUtil {
         return null;
     }
 
+    public String daysDiff(String date1, String date2) {
+        date1 = gregorianDateToJulianDate(date1);
+        date2 = gregorianDateToJulianDate(date2);
+        String year1 = date1.charAt(0) + "" + date1.charAt(1) + "" + date1.charAt(2) + "" + date1.charAt(3);
+        String day1 = date1.charAt(4) + "" + date1.charAt(5) + "" + date1.charAt(6);
+        String year2 = date2.charAt(0) + "" + date2.charAt(1) + "" + date2.charAt(2) + "" + date2.charAt(3);
+        String day2 = date2.charAt(4) + "" + date2.charAt(5) + "" + date2.charAt(6);
+
+        int _year1 = getValueOrNegativeOneForIntegers(year1);
+        int _day1 = getValueOrNegativeOneForIntegers(day1);
+        int _year2 = getValueOrNegativeOneForIntegers(year2);
+        int _day2 = getValueOrNegativeOneForIntegers(day2);
+        int yearDifference = Math.abs(_year1 - _year2);
+        int yearDifferenceInDays = (yearDifference / 4) + (365 * yearDifference);
+        int dayDifferenceIs = yearDifferenceInDays + (Math.abs(_day1 - _day2));
+
+        if (getIsItALeapYear(_year1)) {
+            dayDifferenceIs++;
+        }
+        if (getIsItALeapYear(_year2)) {
+            dayDifferenceIs++;
+        }
+        return dayDifferenceIs + "";
+    }
+
+    private boolean getIsItALeapYear(int year) {
+        if (year % 4 == 0) {
+            return true;
+        }
+        return false;
+    }
+
     private int monthToDays(int month) {
         int days = 0;
         for (int i = 1; i <= month; i++) {
