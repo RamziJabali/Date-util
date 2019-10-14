@@ -1,5 +1,3 @@
-//TODO TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST
-
 import java.util.Scanner;
 
 public class Test {

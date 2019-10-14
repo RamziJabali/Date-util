@@ -68,6 +68,18 @@ public class DateUtil {
         } else if (startYear < startYearHoliday && endYear < endYearHoliday) {
             holidaysWorked = getValueOrNegativeOneForIntegers(daysDiff(startHoliday, endWork));
             workDaysWorked = getValueOrNegativeOneForIntegers(daysDiff(startWork, startHoliday));
+        } else if (startYear == startYearHoliday && endYear < endYearHoliday) {
+            holidaysWorked = getValueOrNegativeOneForIntegers(daysDiff(startWork, endWork));
+            workDaysWorked = 0;
+        } else if (startYear == startYearHoliday && endYear > endYearHoliday) {
+            holidaysWorked = getValueOrNegativeOneForIntegers(daysDiff(startWork, endHoliday));
+            workDaysWorked = getValueOrNegativeOneForIntegers(daysDiff(endHoliday, endWork));
+        } else if (endYear == endYearHoliday && startYear < startYearHoliday) {
+            workDaysWorked = getValueOrNegativeOneForIntegers(daysDiff(startWork, startHoliday));
+            holidaysWorked = getValueOrNegativeOneForIntegers(daysDiff(startHoliday, endWork));
+        } else if (endYear == endYearHoliday && startYear > startYearHoliday) {
+            workDaysWorked = 0;
+            holidaysWorked = getValueOrNegativeOneForIntegers(daysDiff(startWork, endWork));
         } else if (startYear == startYearHoliday && endYear == endYearHoliday) {
             if (startMonth > endMonthHoliday || startMonthHoliday > endMonth) {
                 holidaysWorked = 0;
@@ -84,6 +96,18 @@ public class DateUtil {
             } else if (startMonth > startMonthHoliday && endMonth < endMonthHoliday) {
                 holidaysWorked = (monthToDays(endMonth) + endDay) - (monthToDays(startMonth) + startDay);
                 workDaysWorked = 0;
+            } else if (startMonth == startMonthHoliday && endMonth < endMonthHoliday) {
+                workDaysWorked = 0;
+                holidaysWorked = Math.abs((monthToDays(endMonth) + endDay));
+            } else if (startMonth == startMonthHoliday && endMonth > endMonthHoliday) {//todo here
+                workDaysWorked = (monthToDays(endMonthHoliday) + endDayHoliday);
+                holidaysWorked = Math.abs((monthToDays(endMonth) + endDay) - (monthToDays(endMonthHoliday) + endDayHoliday));
+            } else if (startMonth > startMonthHoliday && endMonth == endMonthHoliday) {
+                holidaysWorked = ((monthToDays(endMonth) + endDay) - monthToDays(startMonth) + startDay);
+                workDaysWorked = 0;
+            } else if (startMonth < startMonthHoliday && endMonth == endMonthHoliday) {
+                workDaysWorked = Math.abs((monthToDays(startMonth) + startDay) - monthToDays(startMonthHoliday) + startDayHoliday);
+                holidaysWorked = Math.abs(holidaysWorked - (monthToDays(endMonth) + endDay));
             } else if (startMonth == startMonthHoliday && endMonth == endMonthHoliday) {
                 if (endDay < startDayHoliday || endDayHoliday < startDay) {
                     workDaysWorked = (endDay - startDay) + 1;
@@ -103,6 +127,18 @@ public class DateUtil {
                 } else if (startDay > startDayHoliday && endDay < endDayHoliday) {
                     holidaysWorked = (endDay - startDay) + 1;
                     workDaysWorked = 0;
+                } else if (startDay == startDayHoliday && endDay < endDayHoliday) {
+                    workDaysWorked = 0;
+                    holidaysWorked = Math.abs(endDay - startDay) +1;
+                }else if (startDay == startDayHoliday && endDay > endDayHoliday) {
+                    holidaysWorked = Math.abs(endDayHoliday - startDay) +1;
+                    workDaysWorked = Math.abs(endDay - holidaysWorked);
+                }else if (endDayHoliday == endDay && startDay > startDayHoliday) {
+                    holidaysWorked = Math.abs(endDayHoliday - startDay) +1;
+                    workDaysWorked = 0;
+                }else if (endDayHoliday == endDay && startDay < startDayHoliday) {
+                    workDaysWorked = Math.abs(startDayHoliday - startDay)+1;
+                    holidaysWorked = Math.abs(endDayHoliday - startDayHoliday) +1;
                 }
             }
         }
@@ -139,7 +175,6 @@ public class DateUtil {
         return true;
     }
 
-
     private boolean doesDayFitInMonth(int day, int month, int year) {
         isItALeapYear = getIsItALeapYear(year);
 
@@ -171,7 +206,6 @@ public class DateUtil {
                 }
                 break;//All months with 30 days
         }
-
         return true;
     }
 
@@ -229,13 +263,13 @@ public class DateUtil {
         String day = inDate.charAt(6) + "" + inDate.charAt(7);//k - day
         String month = inDate.charAt(4) + "" + inDate.charAt(5);//month
         String year = inDate.charAt(2) + "" + inDate.charAt(3);//year
-        String century = inDate.charAt(0) + "" + inDate.charAt(1);//century
         int k = getValueOrNegativeOneForIntegers(day);
         int m = getValueOrNegativeOneForIntegers(month);
-        int Y = getValueOrNegativeOneForIntegers(year);
-        int C = getValueOrNegativeOneForIntegers(century);
-        int W = (int) (k + (2.6 * (m) - .2) - 2 * C + Y + (Y / 4) + (C / 4)) % 7;
-        return getDayOfTheWeek(W);
+        int y = getValueOrNegativeOneForIntegers(year);
+        int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+        y -= (m < 3) ? 1 : 0;
+        int w = ((y + y / 4 - y / 100 + y / 400 + t[m - 1] + k) % 7);
+        return getDayOfTheWeek(w);
     }
 
     public String daysDiff(String date1, String date2) {
@@ -272,6 +306,7 @@ public class DateUtil {
 
     private String getDayOfTheWeek(int w) {
         switch (w) {
+
             case 0:
                 return "Sunday";
             case 1:
@@ -337,5 +372,3 @@ public class DateUtil {
         return result;
     }
 }
-
-
